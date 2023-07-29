@@ -1139,3 +1139,398 @@ if age >= 17:
 #Yes
 ```
 
+##### 2.4  检查多个条件
+
+###### 2.4.1 使用and检查多个条件
+
+要检查是否两个条件都为True，可使用关键字and将两个条件测试合而为一。如果每个测试都通过了，整个表达式的值为True；如果至少有一个测试没有通过，整个表达式就为False。
+
+示例：
+
+检查两个人的年龄是否都不小于21岁
+
+```python
+age_0 = 22
+age_1 = 18
+print(age_0 >= 21 and age_1 >=21)
+
+age_1 = 22
+print(age_0 >= 21 and age_1 >=21)
+
+#运行结果：
+#False
+#True
+```
+
+为改善可读性，可将每个测试分别放在一对圆括号内，但并非必须这样做。
+
+###### 2.4.2  使用or检查多个条件
+
+关键字or也能够让你检查多个条件，但只要至少一个条件满足，就能通过整个测试。仅当两个测试都没有通过时，使用or的表达式才为False。
+
+示例：
+
+```python
+age_0 = 22
+age_1 = 18
+print((age_0 >= 21) or (age_1 >=21))
+
+age_0 = 20
+print(age_0 >= 21 and age_1 >=21)
+
+#运行结果：
+#True
+#False
+```
+
+##### 2.5  检查特定值是否包含在列表中
+
+有时候，执行操作前必须检查列表是否包含特定的值。要判断特定的值是否已包含在列表中，可使用关键字in。
+
+示例：
+
+```python
+banned_users =['andrew','carolina','david']
+user = 'andrew'
+print(user in banned_users)
+
+#运行结果：True
+
+banned_users =['andrew','carolina','david']
+user = 'marie'
+print(user in banned_users)
+
+#运行结果：False
+
+```
+
+也可以使用关键字not in 确定特定的值未包含在列表中。
+
+示例：
+
+```python
+banned_users =['andrew','carolina','david']
+user = 'marie'
+
+if user not in banned_users:
+    print(f"{user.title()},you can post a response if you wish.")
+
+#运行结果：Marie,you can post a response if you wish.
+```
+
+布尔表达式
+
+它不过是条件测试的别名。与条件测试一样，布尔表达式的结果要么为True要么为False。布尔值通常用于记录条件，如游戏是否正在运行，或者用户是否可以编辑网站的特定内容，在跟踪程序状态或程序中重要条件方面，布尔值提供了一种高效的方式。
+
+#### 3.if语句
+
+理解了条件测试后，就可以开始编写if语句了。if语句有很多种，选择使用哪种取决于要测的条件数。
+
+##### 3.1  简单的if语句
+
+最简单的if语句只有一个测试和一个操作。
+
+示例：
+
+```python
+age = 19
+
+if age > 18:
+    print("you are over 18 years old.")
+    
+#运行结果：you are over 18 years old.
+```
+
+先是条件测试，然后在紧跟在测试后面的缩进代码块中，可执行任何操作。如果测试结果为True，Python就会执行紧跟在if语句后面的代码，否则Python将忽略这些代码。
+
+##### 3.2  if—else语句
+
+我们通常需要在条件测试通过时执行一个操作，在没有通过时执行另一个操作。
+
+示例：
+
+```python
+age = 17
+
+if age > 18:
+    print("you are over 18 years old.")
+else:
+    print("you are not over 18 years old.")
+
+#运行结果：you are not over 18 years old.
+```
+
+if—else结构非常适合这种让python执行两种操作之一的情形。
+
+##### 3.3  if-elif-else结构
+
+我们通常需要检查超过两个的情形，为此可使用if-elif-else结构。Python只执行if-elif-else结构中的一个代码块，它依次检查每个条件测试，直到遇到了通过了的条件测试，将执行紧跟它后面的代码，并跳过余下的测试。
+
+示例：
+
+门票收费规则：
+
+4岁以下免费；
+
+4-18岁收取30元；
+
+18岁（含）以上收起50元；
+
+```python
+age = 12
+
+if age >= 18:
+    print("you need to pay 50 yuan.")
+elif age >= 4:
+    print("you need to pay 30 yuan.")
+else:
+    print("you are free.")
+    
+#运行结果：you need to pay 30 yuan.
+
+age = 12
+
+if age >= 18:
+    price = 50
+elif age >= 4:
+    price = 30
+else:
+    price = 0
+
+print(f"you need to pay {price} yuan.")
+#运行结果：you need to pay 30 yuan.
+#第二种写法代码更加简洁
+```
+
+注意：
+
+可根据需要使用任意数量的elif代码块。
+
+可省略else代码块。在有些情况下，else代码块很有用；而在其他一些情况下，使用一条elif语句来处理特定的情形更加清晰。
+
+##### 3.4  测试多个条件
+
+if-elif-else结构功能虽然强大，但仅适合用于只有一个条件满足的情况：遇到通过了的测试后，python就跳过余下的测试，这种行为很好，效率很高，让你能够测试一个特定的条件。
+
+然而，有时候必须检查你关心的所有条件。在这时，应使用一系列不包含elif和else代码块的简单if语句。在可能有多个条件为True且需要在每个条件为True时都采取相应措施时，适合使用这种方法。
+
+示例：
+
+披萨店点餐，根据客户点的配料进行添加配料。
+
+```python
+requested_toppings = ['mushrooms','extra cheese']
+
+if 'mushrooms' in requested_toppings:
+    print("Adding mushrooms.")
+if 'pepperoni' in requested_toppings:
+    print("Adding pepperoni.")
+if 'extra cheese' in requested_toppings:
+    print("Adding extra cheese.")
+
+print("\nFinished making your pizza!")
+   
+#运行结果：
+#Adding mushrooms.
+#Adding extra cheese.
+#
+#Finished making your pizza!
+```
+
+总之，如果只想执行一个代码块，就使用 if-elif-else结构；如果要执行多个代码块，就使用一系列独立的if语句。
+
+##### 3.5  使用if语句处理列表
+
+###### 3.5.1  检查特殊元素
+
+```python
+requested_toppings = ['mushrooms','green peppers','extra cheese']
+
+for requested_topping in requested_toppings:
+    if requested_topping == 'green peppers':
+        print("Sorry,we are out of green peppers right now.")
+    else:
+        print(f"Adding {requested_topping}")
+print("\nFinished making your pizza!")
+
+#运行结果：
+#Adding mushrooms
+#Sorry,we are out of green peppers right now.
+#Adding extra cheese
+#
+#Finished making your pizza!
+```
+
+###### 3.5.2  确定列表不是空的
+
+```python
+requested_toppings = []
+
+if requested_toppings:
+    for requested_topping in requested_toppings:
+        print(f"Adding {requested_topping}")
+    print("\nFinished making your pizza!")
+else:
+    print("Are you sure you want a plain pizza?")
+    
+#运行结果：
+#Are you sure you want a plain pizza?
+```
+
+###### 3.5.3  使用多个列表
+
+```python
+available_toppings = ['mushrooms','green peppers','extra cheese',
+                      'olives','pepperoni','pineapple']
+
+requested_toppings = ['mushrooms','french fries','extra cheese']
+
+for requested_topping in requested_toppings:
+    if requested_topping in available_toppings:
+        print(f"Adding {requested_topping}")
+    else:
+        print(f"Sorry, we don't have {requested_topping}")
+    
+print("\nFinished making you pizzal.")
+
+#运行结果：
+#Adding mushrooms
+#Sorry, we don't have french fries
+#Adding extra cheese
+#
+#Finished making you pizzal.
+```
+
+
+
+if语句格式注意：
+
+在诸如==、>=和<=等比较运算符两边各添加一个空格，比较好。这样的空格会使得代码阅读起来更容易。
+
+### 第5章 字典
+
+#### 1.使用字典
+
+在python中，字典是一系列键值对。每个键都与一个值相关联，你可使用键来访问相关联的值。与键相关联的值可以是数、字符串、列表乃至字典。事实上，可以将任何Python对象用作字典中的值。
+
+在Python中，字典用放在花括号中的一系列键值对来表示。
+
+示例：
+
+```python
+alien_0 ={'color':'green','points':5}
+```
+
+键值对是两个相关联的值。指定键时，Python将返回与之相关联的值。键和值之间用冒号分隔，而键值对之间用逗号分隔。在字典中，想存储多少个键值对都可以。
+
+最简单的字典只有一个键值对。
+
+##### 1.1  访问字典中的值
+
+要获取与键相关联的值，可依次指定字典名和放在方括号内的键。
+
+示例：
+
+```python
+alien_0 ={'color':'green','points':5}
+print(alien_0['color'])
+
+#运行结果：green
+```
+
+字典中可包含任意数量的键值对。
+
+##### 1.2  添加键值对
+
+字典是一种动态结构，可随时在其中添加键值对。要添加键值对，可依次指定字典名、用方括号括起的键和相关联的值。
+
+示例：
+
+```python
+alien_0 ={'color':'green','points':5}
+print(alien_0)   
+
+alien_0['x_position'] = 0
+alien_0['y_position'] = 25
+print(alien_0)
+
+#运行结果：
+#{'color': 'green', 'points': 5}
+#{'color': 'green', 'points': 5, 'x_position': 0, 'y_position': 25}
+```
+
+##### 1.3  创建一个空字典
+
+在空字典中添加键值对有时候可提供便利，而有时候必须这样做。为此，可先使用一对花括号定义一个字典，在分行添加各个键值对。
+
+示例：
+
+```python
+alien_0 = {}
+
+alien_0['color'] = 'green'
+alien_0['points'] = 5
+
+print(alien_0)
+
+#运行结果：{'color': 'green', 'points': 5}
+```
+
+##### 1.4  修改字典中的值
+
+要修改字典中的值，可依次指定字典名、用方括号括起的键，以及与该键相关联的新值。
+
+```python
+alien_0 = {'color':'green'}
+print(f"The alien is {alien_0['color']}")
+
+alien_0['color'] = 'yellow'
+print(f"The alien is {alien_0['color']}")
+
+#运行结果：
+#The alien is green
+#The alien is yellow
+```
+
+```python
+alien_0 = {'x_position':0,'y_position':25,'speed':'medium'}
+print(f"Original x_position:{alien_0['x_position']}")
+
+if alien_0['speed'] == 'slow':
+    x_increment = 1
+elif alien_0['speed'] == 'medium':
+    x_increment = 2
+else:
+    #外星人的速度一定很快
+    x_increment = 3
+
+alien_0['x_position'] = alien_0['x_position'] + x_increment
+print(f"New x_position:{alien_0['x_position']}")
+
+#运行结果：
+#Original x_position:0
+#New x_position:2
+```
+
+这种技术很好，通过修改外星人的字典中的值，可以改变外星人的行为。
+
+##### 1.5  删除键值对
+
+对于字典中不再需要的信息，可使用del语句将相应的键值对彻底删除。使用del语句时，必须指定字典名和要删除的键。
+
+示例：
+
+```python
+alien_0 = {'color':'green','points':5}
+print(alien_0)
+
+del alien_0['points']
+print(alien_0)
+
+#运行结果：
+#{'color': 'green', 'points': 5}
+#{'color': 'green'}
+```
+
+注意：删除的键值对会永远消失。
+
