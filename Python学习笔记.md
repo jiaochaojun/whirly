@@ -1534,3 +1534,705 @@ print(alien_0)
 
 注意：删除的键值对会永远消失。
 
+##### 1.6  由类似对象组成的字典
+
+在前面的示例中，字典存储的是一个对象的多种信息。但是，也可以用字典存储众多对象的同一种信息。
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+language = favorite_languages['sarah'].title()
+print(f"Sarah's favorite language is {language}")
+
+#运行结果：Sarah's favorite language is C
+```
+
+如示例所示，我们将一个较大的字典放在了多行中。每个键都是一个被调查者的名字，而每个值都是被调查者喜欢的语言。确定需要使用多行来定义字典时，要在输入左花括号后按回车键。在下一行缩进四个空格，指定第一个键值对，并在它后面加上一个逗号。定义好字典后，在最后一个键值对的下一行添加一个右花括号，并缩进四个空格，使其与字典中的键对齐。一种不错的做法是，在最后一个键值对后面也加上逗号，为以后在下一行添加键值对做好准备。
+
+##### 1.7  使用get()来访问值
+
+使用放在方括号内的键从字典中获取值时，可能会引发问题：如果指定的键不存在就会出错。
+
+就字典而言，可使用方法get()，在指定的键不存在时返回一个默认值，从而避免这样的错误。
+
+方法get()的第一个参数用于指定键，是必不可少的；第二个参数为指定的键不存在时要返回的值，是可选的：
+
+示例：
+
+```python
+alien_0 = {'color':'green','speed':'slow'}
+
+point_value = alien_0.get('points','No point value assigned')
+print(point_value)
+
+#运行结果：No point value assigned
+```
+
+如果字典中有’points‘，将获得与之相关联的值；如果没有，将获得指定的默认值。虽然这里没有键’points‘，但将获得一条清晰的消息，不会引发错误。如果指定的键有可能不存在，应考虑使用方法get()，而不要使用方括号表示法。
+
+**注意：**  调用get()时，如果没有指定第二个参数且指定的键不存在，Python将返回值None。这个特殊值表示没有相应的值。None并非错误，而是一个表示所需值不存在的特殊值。
+
+#### 2.遍历字典
+
+##### 2.1  遍历所有键值对
+
+示例：
+
+```python
+user_0 = {
+    'username':'efermi',
+    'first':'enrico',
+    'last':'fermi',
+    }
+
+for key,value in user_0.items():
+    print(f"\nKey:{key}")
+    print(f"Value:{value}")
+
+#运行结果：
+#Key:username
+#Value:efermi
+#
+#Key:first
+#Value:enrico
+#
+#Key:last
+#Value:fermi
+```
+
+for语句的第二部分包含字典名和方法items()，它返回一个键值对列表。接下来，for循环依次将每个键值对赋给指定的两个变量。
+
+##### 2.2  遍历字典中的所有键
+
+在不需要使用字典中的值时，方法keys()很有用。
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+for name in favorite_languages.keys():
+    print(name.title())
+    
+#运行结果：
+#Jen
+#Sarah
+#Edward
+#Phil
+```
+
+**注意：** 遍历字典时，会默认遍历所有键。因此显式地使用方法Keys()可让代码容易理解，但你也可以选择省略它。
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+for name in favorite_languages:
+    print(name.title())
+    
+#运行结果：
+#Jen
+#Sarah
+#Edward
+#Phil
+```
+
+并且在这种循环中，我们也可以使用当前键来访问与之相关联的的值。
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+
+friends = ['phil','sarah']
+
+for name in favorite_languages:
+    print(f"Hi {name}")
+    
+    if name in friends:
+        language = favorite_languages[name].title()
+        print(f"\t{name.title()}, I see you love {language}!")
+
+#运行结果：
+#Hi jen
+#Hi sarah
+#	Sarah, I see you love C!
+#Hi edward
+#Hi phil
+#	Phil, I see you love Python!
+```
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+
+if 'erin' not in favorite_languages.keys():
+    print("Erin, please take our poll!")
+    
+#运行结果：Erin, please take our poll!
+```
+
+方法keys()并非只能用于遍历：实际上，它返回一个列表，其中包含字典中的所有键。所以检测到’erin‘，不在列表中，打印一条消息。
+
+##### 2.3  按特定顺序遍历字典中的所有键
+
+从python3.7开始，遍历字典时将按插入的顺序返回其中的元素。不过在有些情况下，你可能要按照与此不同的顺序遍历字典。
+
+要以特定顺序返回元素，一种办法是在for循环中对返回的键进行排序。为此，可使用函数sorted()来获得按特定顺序排列的键列表副本：
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+
+
+for name in sorted(favorite_languages.keys()):
+    print(f"{name.title()}, thank you for taking the poll.")
+#运行结果：
+#Edward, thank you for taking the poll.
+#Jen, thank you for taking the poll.
+#Phil, thank you for taking the poll.
+#Sarah, thank you for taking the poll.
+```
+
+##### 2.4  遍历字典中的所有值
+
+如果主要对字典包含的值感兴趣，可使用方法values()来返回一个值列表，不包含任何键。
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+
+
+print("The following languages have been mentioned:")
+for language in favorite_languages.values():
+    print(language.title())
+
+#运行结果：
+#The following languages have been mentioned:
+#Python
+#C
+#Ruby
+#Python
+```
+
+这种提取方法显然没有考虑重复项。为剔除重复项，可使用集合（set）。集合中的每个元素都必须是独一无二的。
+
+```python
+favorite_languages = {
+    'jen':'python',
+    'sarah':'c',
+    'edward':'ruby',
+    'phil':'python',
+    }
+
+
+print("The following languages have been mentioned:")
+for language in set(favorite_languages.values()):
+    print(language.title())
+    
+#运行结果：
+#The following languages have been mentioned:
+#Ruby
+#C
+#Python
+```
+
+通过对包含重复元素的列表调用set()，可让Python找出列表中独一无二的元素，并使用这些元素来创建一个集合。结果是一个不重复的列表。
+
+**注意：**  可使用一对花括号直接创建集合，并在其中用逗号分隔元素：
+
+示例：
+
+```python
+languages = {'python','ruby','python','c'}
+print(languages)
+
+#运行结果：{'ruby', 'python', 'c'}
+```
+
+集合和字典很容易混淆，因为它们都是一对花括号定义的。当花括号内没有键值对时，定义的很可能是集合。不同于列表和字典，集合不会以特定的顺序存储元素。
+
+#### 3.嵌套
+
+有时候，需要将一系列字典存储在列表中，或将列表作为值存储在字典中，这称为嵌套。你可以在列表中嵌套字典、在字典中嵌套列表甚至在字典中嵌套字典。
+
+##### 3.1  字典列表
+
+示例：
+
+```python
+alien_0 = {'color':'green','points':5}
+alien_1 = {'color':'yellow','points':10}
+alien_2 = {'color':'red','points':15}
+
+aliens = [alien_0,alien_1,alien_2]
+
+for alien in aliens:
+    print(alien)
+
+#运行结果：
+#{'color': 'green', 'points': 5}
+#{'color': 'yellow', 'points': 10}
+#{'color': 'red', 'points': 15}
+```
+
+示例：
+
+```python
+aliens = []
+
+for alien_number in range(30):
+    new_alien = {'color':'green','points':5,'speed':'slow'}
+    aliens.append(new_alien)
+
+for alien in aliens[:5]:
+    print(alien)
+    
+print("...")
+print(f"Total number of aliens:{len(aliens)}")
+
+#运行结果：
+#{'color': 'green', 'points': 5, 'speed': 'slow'}
+#{'color': 'green', 'points': 5, 'speed': 'slow'}
+#{'color': 'green', 'points': 5, 'speed': 'slow'}
+#{'color': 'green', 'points': 5, 'speed': 'slow'}
+#{'color': 'green', 'points': 5, 'speed': 'slow'}
+#...
+#Total number of aliens:30
+```
+
+在本例中首先创建一个空列表，用于存储接下来要被创建的所有外星人。range()返回一系列数，唯一的用途是告诉Python要重复这个循环多少次。每次执行这个循环时，都创建一个外星人，并将其附加到列表aliens末尾。使用一个切片来打印前5个外星人。打印列表长度，以证明确实创建了30个外星人。
+
+这些外星人都具有相同的特征，但又都是独立的，我们可以独立地修改每个外星人。
+
+##### 3.2  在字典中存储列表
+
+有时候，需要将列表存储在字典中，而不是将字典存储在列表中。
+
+示例：
+
+```python
+pizza = {
+    'crust':'thick',
+    'toppings':['mushrooms','extra cheese'],
+    }
+
+print(f"You ordered a {pizza['crust']}-crust pizza "
+      "with the following topping:")
+
+for topping in pizza['toppings']:
+    print("\t" + topping)
+    
+#运行结果：
+#You ordered a thick-crust pizza with the following topping:
+#	mushrooms
+#	extra cheese
+```
+
+如果函数调用print()中的字符很长，可以在合适的位置分行。只需要在每行末尾都加上引号，同时对于除第一行外 的其他各行，都在行首加上引号并缩进。这样，python将自动合并圆括号内的所有字符串。
+
+示例：
+
+```python
+favorite_languages = {
+    'jen':['python','ruby'],
+    'sarah':['c'],
+    'edward':['ruby','go'],
+    'phil':['python','haskell'],
+    }
+
+for name,languages in favorite_languages.items():
+    print(f"\n{name.title()}'s favorite languages are:")
+    for language in languages:
+        print(f"\t{language.title()}")
+        
+#运行结果：
+#Jen's favorite languages are:
+#	Python
+#	Ruby
+#
+#Sarah's favorite languages are:
+#	C
+#
+#Edward's favorite languages are:
+#	Ruby
+#	Go
+#
+#Phil's favorite languages are:
+#	Python
+#	Haskell
+```
+
+注意：列表和字典的嵌套层级不应太多。如果嵌套层级比前面的示例多得多，很可能有更简单的解决方案。
+
+##### 3.3  在字典中存储字典
+
+可在字典中嵌套字典，但这样做时，代码可能很快复杂起来。
+
+示例：
+
+```python
+users = {
+    'aeinstein':{
+        'first':'albert',
+        'last':'einstein',
+        'location':'princeton',
+        },
+    'mcurie':{
+        'first':'marie',
+        'last':'curie',
+        'location':'paris',
+        },
+    }
+
+for username,user_info in users.items():
+    print(f"\nUsername:{username}")
+    full_name = f"{user_info['first']}{user_info['last']}"
+    location = user_info['location']
+    
+    print(f"\tFull name:{full_name.title()}")
+    print(f"\tLocation:{location.title()}")
+    
+#运行结果：
+#Username:aeinstein
+#	Full name:Alberteinstein
+#	Location:Princeton
+#
+#Username:mcurie
+#	Full name:Mariecurie
+#	Location:Paris
+```
+
+### 第6章  用户输入和while循环
+
+#### 1.用户输入
+
+##### 1.1  函数input()的工作原理
+
+函数input()让程序暂停运行，等待用户输入一些文本。获取用户输入后，Python将其赋给一个变量，以方便使用。
+
+示例：
+
+```python
+message = input("Tell me something, and I will repeat it back to you: ")
+print(message)
+
+#运行结果：
+#Tell me something, and I will repeat it back to you: hello
+#hello
+```
+
+每当使用函数input()时，都应指定清晰易懂的提示，准确地指出希望用户提供什么样的信息，指出用户应该输入何种信息的任何提示都行，通过在提示末尾冒号后面包含一个空格，可将提示与用户输入分开，让用户清楚地知道其输入始于何处。有时候提示可能超过一行。例如，你可能需要指出获取特定输入的原因。在这种情况下，可将提示赋给一个变量，再将该变量传递给函数input()。这样，即便提示超过一行，input()语句也会非常清晰。
+
+示例：
+
+```python
+prompt = "If you tell us who you are, we can personalize the messages you see."
+prompt += "\nWhat is your first name? "
+
+name = input(prompt)
+print(f"\nHello,{name}!")
+
+#运行结果：
+#If you tell us who you are, we can personalize the messages you see.
+#What is your first name? chaojun
+#
+#Hello,chaojun!
+```
+
+本例演示了一种创建多行字符串的格式。第一行将消息的前半部分赋给变量prompt中。在第二行中，运算符+=在前面赋给变量prompt的字符串末尾附加一个字符串。最终的提示占据两行，且问号后面有一个空格，这也是为了使其更加清晰。
+
+##### 1.2  使用int()来获取数值输入
+
+使用函数int()时，Python将用户输入解读为字符串。如果只需要打印输出，并没有什么问题。但是如果试图将输入作为数来使用，就会引发错误。因为它无法将字符串和整数进行比较。为了解决这个问题，可使用函数int()，它让Python将输入视为数值。函数int()将数的字符串表示转换为数值表示。
+
+示例：
+
+```python
+age = input("How old are you? ")
+
+age = int(age)
+if age > 12:
+    print("Yes")
+    
+#运行结果：
+#How old are you? 19
+#Yes
+```
+
+将数值输入用于计算和比较前，务必将其转换为数值表示。
+
+##### 1.3  求模运算符
+
+处理数值信息时，求模运算符%是个很有用的工具，它将两个数相除并返回余数。
+
+#### 2.while循环
+
+for循环用于针对集合中的每个元素都执行一个代码块，而while循环则不断运行，直到指定的条件不满足为止。
+
+##### 2.1  使用while循环
+
+可用while循环来数数。
+
+```python
+current_number = 1
+while current_number <= 5:
+    print(current_number)
+    current_number += 1
+    
+#运行结果：
+#1
+#2
+#3
+#4
+#5
+```
+
+##### 2.2  让用户选择何时退出
+
+可以使用while循环让程序在用户愿意时不断运行。
+
+示例：我们可以定义一个退出值，只要用户输入的不是这个值，程序就接着运行。
+
+```python
+prompt = "\nTell me something, and I will repeat it back you:"
+prompt += "\nEnter 'quit' to end the progrem. "
+
+message = ""
+while message != 'quit':
+    message = input(prompt)
+    
+    if message != 'quit':
+        print(message)
+#运行结果：
+#Tell me something, and I will repeat it back you:
+#Enter 'quit' to end the progrem. hello
+#hello
+#
+#Tell me something, and I will repeat it back you:
+#Enter 'quit' to end the progrem. quit
+```
+
+##### 2.3  使用标志
+
+在更复杂的程序中，很多不同的事件会导致程序停止运行。如果在一条while语句中检查所有条件，将会既复杂又困难。在要求很多条件都满足才继续运行的程序中，可定义一个变量，用于判断整个程序是否处于活动状态。这个变量称为标志，充当程序的交通信号灯。可以让程序在标准为True时运行，在False时停止运行。这样while语句中就只需要检查一个条件：标志的当前值是否为True。然后所有其他测试（是否发生改变，应将标志设置为False事件）都放在其他地方，从而使程序更整洁。
+
+示例：
+
+```python
+prompt = "\nTell me something, and I will repeat it back you:"
+prompt += "\nEnter 'quit' to end the progrem. "
+
+active = True
+while active:
+    message = input(prompt)
+    
+    if message == 'quit':
+        active = False
+    else:
+        print(message)
+        
+#运行结果：
+#Tell me something, and I will repeat it back you:
+#Enter 'quit' to end the progrem. hello
+#hello
+#
+#Tell me something, and I will repeat it back you:
+#Enter 'quit' to end the progrem. quit
+```
+
+##### 2.4  使用break退出循环
+
+要立即退出while循环，不在运行循环中余下的代码，也不管条件测试的结果如何，可使用break语句。break语句用于控制控制程序流程，可控制哪些代码行将执行、哪些代码行不执行，从而让程序按你的要求执行你要执行的代码。
+
+示例：
+
+```python
+prompt = "\nPlease enter the name of a city you have visited:"
+prompt += "\n(Enter 'quit' when you are finished.) "
+
+while True:
+    city = input(prompt)
+    
+    if city == 'quit':
+        break
+    else:
+        print(f"I'd love to go to {city.title()}")
+        
+#运行结果：
+#Please enter the name of a city you have visited:
+#(Enter 'quit' when you are finished.) chong qing
+#I'd love to go to Chong Qing
+#
+#Please enter the name of a city you have visited:
+#(Enter 'quit' when you are finished.) nan jing
+#I'd love to go to Nan Jing
+#
+#Please enter the name of a city you have visited:
+#(Enter 'quit' when you are finished.) quit
+```
+
+以while True打头的循环将不断运行，直到遇到break语句。
+
+在任何python的循环中都可以用break语句。例如可使用break语句来退出遍历列表或字典的for循环。
+
+##### 2.5  在循环中使用continue
+
+要返回循环开头，并根据条件测试结果，决定是否继续执行，可使用continue语句，它不像break语句那样不再执行余下的代码并退出整个循环。
+
+示例：
+
+```python
+current_number = 0
+while current_number < 10:
+    current_number += 1
+    if current_number % 2 == 0:
+        continue
+    
+    print(current_number)
+
+#运行结果：
+#1
+#3
+#5
+#7
+#9
+```
+
+避免无限循环
+
+每个while循环都必须停止运行的途径，这样才不会没完没了地执行下去。
+
+如果程序陷入无限循环，可按Ctrl+C，也可关闭显示程序输出的终端窗口。
+
+##### 2.6  使用while循环处理列表和字典
+
+目前为止，我们每次都只处理了一项用户信息：获取用户的输入，再将输入打印出来或做出应答；循环再次运行时，获悉另一个输入值并作出响应。然而，要记录大量的用户和信息，需要在while循环中使用列表和字典。
+
+###### 2.6.1  在列表之间移动元素
+
+示例：
+
+```python
+unconfirmed_users = ['alice','brian','candace']
+confirmed_users = []
+
+while unconfirmed_users:
+    current_user = unconfirmed_users.pop()
+    
+    print(f"Verifying user:{current_user.title()}")
+    confirmed_users.append(current_user)
+    
+print("\nThe following users have been confirmed:")
+for confirmed_user in confirmed_users:
+    print(confirmed_user.title())
+    
+#运行结果：
+#Verifying user:Candace
+#Verifying user:Brian
+#Verifying user:Alice
+#
+#The following users have been confirmed:
+#Candace
+#Brian
+#Alice
+```
+
+###### 2.6.2  删除为特定值的所有列表元素
+
+前面我们使用函数remove()来删除列表中的特定值。这之所以可行是因为要删除的值只在列表中出现一次，如果要删除列表中所有为特定值的元素，该怎么办呢？
+
+示例：
+
+```python
+pets = ['dog','cat','dog','goldfish','cat','rabbit','cat']
+print(pets)
+
+while 'cat' in pets:
+    pets.remove('cat')
+    
+print(pets)
+
+#运行结果：
+#['dog', 'cat', 'dog', 'goldfish', 'cat', 'rabbit', 'cat']
+#['dog', 'dog', 'goldfish', 'rabbit']
+```
+
+###### 2.6.3  使用用户输入来填充字典
+
+可使用while循环提示用户输入任意多的信息。
+
+示例：
+
+```python
+responses = {}
+
+#设置一个标志，指出调查是否继续。
+polling_active = True
+
+while polling_active:
+    
+    #提示输入被调查者的姓名和回答。
+    name = input("\nWhat is your name?")
+    response = input("Which moutain would you like to climb someday? ")
+    
+    #将回答存储在字典中。
+    responses[name] = response
+    
+    #看看是否还有人要参与调查。
+    repeat = input("Would you like to let another person respond?(yes/no) ")
+    if repeat == 'no':
+        polling_active = False
+
+#调查结束，显示结果。
+print("\n---Poll Results---")
+for name,response in responses.items():
+    print(f"{name} would like to climb {response}.")
+    
+#运行结果：
+#What is your name?Li hua
+#Which moutain would you like to climb someday? Mountain Tai
+#Would you like to let another person respond?(yes/no) no
+#
+#---Poll Results---
+#Li hua would like to climb Mountain Tai.
+```
+
+### 第7章 函数
+
