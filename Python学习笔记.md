@@ -2236,3 +2236,585 @@ for name,response in responses.items():
 
 ### 第7章 函数
 
+函数是带名字的代码块，用于完成具体的工作。要执行的函数定义的特定任务，可调用该函数。需要在程序中多次执行同一项任务时，无需反复编写完成该任务的代码，只需要调用执行该任务的函数。
+
+#### 1.定义函数
+
+示例：
+
+```python
+def greet_user():
+    """显示简单的问候语。"""
+    print("Hello!")
+    
+greet_user()
+
+#运行结果：Hello!
+```
+
+关键字def告诉python，我要定义一个函数。向python指出了函数名，还可能在圆括号内指出函数为完成任务需要什么样的信息。在这里，函数名为greet_user(),不需要任何信息就可以完成任务，所有括号内是空的。（**注意**： 即便不需要任何其他信息，括号也不可少），最后定义以冒号结尾。跟在后面缩进的代码块构成了函数体。第二行的文本称为文档字符串的注释，描述了函数是做什么的。文档字符串用三引号括起，python使用它们生成有关程序中函数的文档。要使用这个函数，就调用它。调用函数，可依次指定函数名以及用圆括号括起的必要信息。
+
+##### 1.1  向函数传递信息
+
+示例：
+
+```python
+def greet_user(username):
+    """显示简单的问候语。"""
+    print(f"Hello,{username.title()}!")
+    
+greet_user('jesse')
+
+#运行结果：Hello,Jesse!
+```
+
+这里就实现了将用户名传递给greet_user（）函数。
+
+##### 1.2  实参和形参
+
+如上例中，函数greet_user()的定义中，变量username是一个形参，即函数完成工作所需信息。在代码greet_user('jesse')中，值‘jesse’是一个实参，即调用函数时传递给函数的信息。在代码greet_user('jesse')中，将实参‘jesse’传递给了函数greet_user()，这个值被赋给了形参username。
+
+#### 2.传递实参
+
+函数定义中可能包含多个形参，因此函数调用中也可能包含多个实参。向函数传递实参的方式很多：可使用**位置实参**，这要求实参的顺序与形参的顺序相同；也可使用**关键字实参**，其中每个实参都由变量名和值组成；还可使用**列表和字典**。
+
+##### 2.1  位置实参
+
+调用函数时，必须将函数调用中的每个实参都关联到函数定义中的一个形参。为此，最简单的关联方式是基于实参的顺序。这种关联方式称为位置实参。
+
+示例：
+
+```python
+def describe_pet(animal_type,pet_name):
+    """显示宠物信息。"""
+    print(f"\nI have a {animal_type}")
+    print(f"My {animal_type}'s name is {pet_name}")
+    
+describe_pet('hamster','harry')
+
+#运行结果：
+#I have a hamster
+#My hamster's name is harry
+```
+
+在函数调用中，实参‘hamster’被赋给形参animal_type，实参‘harry’被赋给形参pet_name。
+
+可根据需要多次调用函数。
+
+```python
+def describe_pet(animal_type,pet_name):
+    """显示宠物信息。"""
+    print(f"\nI have a {animal_type}")
+    print(f"My {animal_type}'s name is {pet_name}")
+    
+describe_pet('hamster','harry')
+describe_pet('dog','Willie')
+
+#运行结果：
+#I have a hamster
+#My hamster's name is harry
+#
+#I have a dog
+#My dog's name is Willie
+```
+
+在函数中，可根据需要使用任意数量的位置实参，python将按顺序将函数调用中的实参关联到函数定义中相应的形参。
+
+**位置实参的顺序很重要！！！**
+
+##### 2.2  关键字实参
+
+关键字实参是传递给函数的名称值对。因为直接在实参中将名称和值关联起来，所以向函数传递实参时，不会混淆。
+
+示例：
+
+```python
+def describe_pet(animal_type,pet_name):
+    """显示宠物信息。"""
+    print(f"\nI have a {animal_type}")
+    print(f"My {animal_type}'s name is {pet_name}")
+    
+describe_pet(animal_type = 'hamster',pet_name = 'harry')
+describe_pet(animal_type = 'dog',pet_name = 'Willie')
+
+#运行结果：
+#I have a hamster
+#My hamster's name is harry
+#
+#I have a dog
+#My dog's name is Willie
+```
+
+注意：关键字实参的顺序无关紧要，因为python已经知道应该将实参分别赋给哪个形参。
+
+```python
+def describe_pet(animal_type,pet_name):
+    """显示宠物信息。"""
+    print(f"\nI have a {animal_type}")
+    print(f"My {animal_type}'s name is {pet_name}")
+    
+describe_pet(pet_name = 'harry',animal_type = 'hamster')
+
+#运行结果：
+#I have a hamster
+#My hamster's name is harry
+```
+
+注意：使用关键字实参时，务必准确指定函数定义中的形参名。
+
+##### 2.3  默认值
+
+编写函数时，可给每个形参指定默认值，在调用函数时，给形参提供了实参时，python将使用指定的实参值；否则，将使用形参的默认值。形参设定默认值后，可在函数调用中省略相应的实参。使用默认值可简化函数调用，还可清楚地指出函数的典型用法。
+
+示例：
+
+比如上面宠物信息函数，如果你发现大多数宠物是小狗，那么你可以将形参animal_type的默认值设置为’dog‘。这样调用函数描述小狗时，就可不提供这种信息：
+
+```python
+def describe_pet(pet_name,animal_type='dog'):
+    """显示宠物信息。"""
+    print(f"\nI have a {animal_type}")
+    print(f"My {animal_type}'s name is {pet_name.title()}")
+    
+describe_pet(pet_name = 'willie')
+
+#运行结果：
+#I have a dog
+#My dog's name is Willie
+```
+
+**注意：** 这里修改了形参的排列顺序，函数调用时只包含一个实参，视为位置实参，所以形参的顺序要改变。
+
+即：使用默认值时，必须先在形参列表中列出没有默认值的形参，再列出有默认值的实参。
+
+##### 2.4  等效的函数调用
+
+鉴于可混合使用位置实参、关键字实参和默认值，通常有多种等效的函数调用方式。
+
+如上例所示，animal_type提供了默认值，所以在任何情况下都必须给pest_name提供实参。指定该实参时可采用位置方式或者关键字方式。如果描述的不是小狗，还必须在函数调用中给animal_type提供实参。同样指定该实参时，可采用位置方式或者关键字方式。
+
+使用函数后，有可能遇到实参不匹配错误。提供的实参多于或者少于函数完成工作所需的信息时，将出现实参不匹配错误。
+
+#### 3.返回值
+
+函数并非总是直接显示输出，它还可以处理一些数据，并返回一个或一组值。函数返回的值称为返回值。在函数中，可使用return语句将值返回到调用函数的代码行。返回值让你能够将程序的大部分繁重的工作移到函数中去完成，从而简洁主程序。
+
+示例：
+
+接受名和姓并返回整洁的姓名
+
+```python
+def get_formatted_name(first_name,last_name):
+    """返回整洁的姓名。"""
+    full_name = f"{first_name} {last_name}"
+    return full_name.title()
+musician = get_formatted_name('jimi', 'hendrix')
+print(musician)
+
+#运行结果：Jimi Hendrix
+```
+
+
+
+让实参变成可选的
+
+有时候，需要让实参变成可选的，这样使用函数的人就能只在必要时提供额外信息。可使用默认值来让实参变成可选的。
+
+示例：
+
+```python
+def get_formatted_name(first_name,last_name,middle_name = ''):
+    """返回整洁的姓名。"""
+    if middle_name:
+        full_name = f"{first_name} {middle_name} {last_name}"
+    else:
+        full_name = f"{first_name} {last_name}"
+    return full_name.title()
+
+musician = get_formatted_name('jimi', 'hendrix')
+print(musician)
+
+musician = get_formatted_name('john','hooker','lee')
+print(musician)
+
+#运行结果：
+#Jimi Hendrix
+#John Lee Hooker
+```
+
+可选值让函数能够处理各种不同的情形，同时确保函数调用尽可能简单。
+
+##### 3.1  返回字典
+
+函数可返回任何类型的值，包括列表和字典等较复杂的数据结构。
+
+示例：
+
+```python
+def build_person(first_name,last_name):
+    """返回一个字典，其中包含有关一个人的信息。"""
+    person = {'first':first_name,'last':last_name}
+    return person
+
+musician = build_person('jimi','hendrix')
+print(musician)
+
+#运行结果：{'first': 'jimi', 'last': 'hendrix'}
+```
+
+这个函数接受简单的文本信息，并将其放在一个更合适的数据结构中，让你不仅能打印这些信息，还能以其他方式处理它们。还可以拓展这个函数，使其接受可选值，如中间名、年龄、职业等其他任何要存储的信息。
+
+##### 3.2  结合使用函数和while循环
+
+可将函数同前面的任何python结构结合起来使用。
+
+```python
+def get_formatted_name(first_name,last_name):
+    """返回整洁的姓名。"""
+    full_name = f"{first_name} {last_name}"
+    return full_name.title()
+
+while True:
+    print("\nPlease tell me your name:")
+    print("(enter 'q' at any time to quit)")
+    
+    f_name = input("First name: ")
+    if f_name == 'q':
+        break
+    
+    l_name = input("Last name: ")
+    if l_name == 'q':
+        break
+    
+    formatted_name = get_formatted_name(f_name, l_name)
+    print(f"\nHello,{formatted_name}")
+    
+#运行结果：
+#Please tell me your name:
+#(enter 'q' at any time to quit)
+#First name: eric
+#Last name: matthes
+#
+#Hello,Eric Matthes
+#
+#Please tell me your name:
+#(enter 'q' at any time to quit)
+#First name: q
+```
+
+
+
+##### 3.3  传递列表
+
+将列表传递给函数后，函数可以直接访问其内容。
+
+```python
+def greet_users(names):
+    """向列表中的每位用户发出简单的问候。"""
+    for name in names:
+        msg = f"Hello,{name.title()}!"
+        print(msg)
+        
+usernames = ['hannah','ty','margot']
+greet_users(usernames)
+
+#运行结果：
+#Hello,Hannah!
+#Hello,Ty!
+#Hello,Margot!
+```
+
+###### 3.3.1  在函数中修改列表
+
+将列表传递给函数后，函数就可对其进行修改。在函数中对这个列表所做的任何修改都是永久性的，这让你能够高效地处理大量数据。
+
+示例：
+
+```python
+def print_models(unprinted_designs,completed_models):
+    """
+    模拟打印每个设计，直到没有未打印的设计为止。
+    打印每个设计后，都将其移到列表completed_models中。
+    """
+    while unprinted_designs:
+        current_design = unprinted_designs.pop()
+        print(f"Printing model:{current_design}")
+        completed_models.append(current_design)
+        
+def show_completed_models(completed_models):
+    """显示打印好的所有模型。"""
+    print("\nThe following models have been printed:")
+    for completed_model in completed_models:
+        print(completed_model)
+        
+unprinted_designs = ['phone case','robot pendant','dodecahedron']
+completed_models = []
+
+print_models(unprinted_designs, completed_models)
+show_completed_models(completed_models)
+
+#运行结果：
+#Printing model:dodecahedron
+#Printing model:robot pendant
+#Printing model:phone case
+#
+#The following models have been printed:
+#dodecahedron
+#robot pendant
+#phone case
+```
+
+###### 3.3.2  禁止函数修改列表
+
+有时候需要禁止函数修改列表。
+
+可向函数传递列表的副本而非原件，这样函数的修改都只影响副本，而原件丝毫不受影响。
+
+要将列表的副本传递给函数可以这样做：
+
+```python
+function_name(list_name[:])
+```
+
+切片表示法[:]创建列表的副本。
+
+虽然像函数传递列表的副本可以保留原始列表的内容，但除非有充分的理由，否则还是应该将原始列表传递给函数。这是因为让函数使用现成的列表可避免花时间和内存创建副本，从而提高效率，在处理大型列表时尤其如此。
+
+##### 3.4  传递任意数量的实参
+
+有时候，预先不知道函数需要接受多少个实参，好在Python允许函数从调用语句中收集任意数量的实参。
+
+示例：
+
+```python
+def make_pizza(*toppings):
+    """打印顾客点的所有配料。"""
+    print(toppings)
+    
+make_pizza('pepperoni')
+make_pizza('mushrooms','green peppers','extra cheese')
+
+#运行结果：
+#('pepperoni',)
+#('mushrooms', 'green peppers', 'extra cheese')
+```
+
+形参名*toppings中的星号让Python创建一个名为toppings的空元组，并将收到的所有值都封装到这个元组中。
+
+
+
+###### 3.4.1  结合使用位置实参和任意数量实参
+
+如果要让函数接受不同类型的实参，必须在函数定义中将接纳任意数量实参的形参放在最后。Python先匹配位置实参和关键字实参，再将余下的实参都搜集到最后一个形参中。
+
+**注意：**  你会经常看到通用形参名*args，它也收集任意数量的位置实参。
+
+###### 3.4.2  使用任意数量的关键字实参
+
+有时候，需要接受任意数量的实参，但预先不知道传递给函数的会是什么样的信息。在这种情况下，可将函数编写成能够接受任意数量的键值对——调用语句提供多少就接受多少。
+
+示例：
+
+```python
+def build_profile(first,last,**user_info):
+    """创建一个字典，其中包含我们知道的有关用户的一切。"""
+    user_info['first_name'] = first
+    user_info['last_name'] = last
+    return user_info
+
+user_profile = build_profile('albert','einstein',
+                             location = 'princeton',
+                             filed = 'physcs')
+print(user_profile)
+
+#运行结果：
+#{'location': 'princeton', 'filed': 'physcs', 'first_name': 'albert', 'last_name': #'einstein'}
+```
+
+函数build_profile()的定义要求提供名和姓，同时允许根据提供需要提供任意数量的名称值对。形参**user_info中的两个星号让python创建一个名为user_info的空字典，并将收到的所有名称值对都放到这个字典中。在这个函数中可以像访问其他字典那样访问user_info中的名称值对。函数内将名和姓加入字典中，然后返回字典。
+
+**注意：** 你经常看到形参名**kwargs,它用于收集任意数量的关键字实参。
+
+
+
+#### 4.将函数存储在模块中
+
+使用函数的优点之一是可以将代码块与主程序分离。通过给函数指定描述性名称，可以让主程序容易理解的多。还可以更进一步，将函数存储在成为**模块**的独立文件中，再将模块导入到主程序中。import语句允许在当前运行的程序文件中使用模块中的代码。
+
+通过将函数存储在独立的文件中，可隐藏程序代码的细节，将重点放在程序的高层逻辑上，这还能让你在众多不同的程序中重用函数。将函数存储在独立文件中后，可与其他程序员共享这些文件而不是整个程序。知道如何导入函数还能让你使用其他程序员编写的函数库。
+
+导入模块的方法有很多种，以下一一进行简要介绍。
+
+##### 4.1导入整个模块
+
+要让函数是可导入的，得先创建模块。模块是拓展名为.py的文件，包含要导入到程序中的代码。
+
+下面创建一个包含函数make_pizza()的模块。为此，将文件pizza.py中除函数make_pizza()之外的其他代码删除。
+
+接下来，在pizza.py所在目录中创建一个名为making_pizzas.py的文件，这个文件导入刚创建的模块，再调用make_pizza()两次。
+
+要调用被导入模块中的函数，可指定被导入模块的名称pizza和函数名make_pizza()，并用句点分隔。
+
+示例：
+
+pizza.py
+
+```python
+def make_pizza(size,*toppings):
+    """概述要制作的披萨。"""
+    print(f"\nMaking a {size}-inch pizza with the following toppings:")
+    for topping in toppings:
+        print(f"-{topping}")
+```
+
+```python
+#making_pizzas.py
+import pizza
+
+pizza.make_pizza(16,'pepperoni')
+pizza.make_pizza(12,'mushrooms','green peppers','extra cheese')
+
+#运行结果：
+#Making a 16-inch pizza with the following toppings:
+#-pepperoni
+
+#Making a 12-inch pizza with the following toppings:
+#-mushrooms
+#-green peppers
+#-extra cheese
+```
+
+
+
+#####  4.2导入特定的函数
+
+还可以导入模块中的特定函数，导入方法的语法如下：
+
+> from module_name import function_name
+
+通过用逗号分隔函数名，可根据需要从模块中导入任意数量的函数：
+
+> from module_name import function_0, function_1, function_2
+
+使用这种语法时，调用函数时无需使用句点。由于import语句显式地导入了函数make_pizza()，调用时只需指定其名称即可。
+
+示例：
+
+```python
+from pizza import make_pizza
+
+make_pizza(16,'pepperoni')
+make_pizza(12,'mushrooms','green peppers','extra cheese')
+
+#运行结果：
+#Making a 16-inch pizza with the following toppings:
+#-pepperoni
+#
+#Making a 12-inch pizza with the following toppings:
+#-mushrooms
+#-green peppers
+#-extra cheese
+```
+
+
+
+##### 4.3使用as给函数指定别名
+
+如果要导入函数的名称可能与程序中现有的名称冲突，或者函数的名称太长，可指定简短而独一无二的别名：函数的另一个名称，类似于外号。要给函数取这种特殊外号，需要在导入它时指定。
+
+通用语法：
+
+> from module_name import function_name as fn
+
+示例：
+
+```python
+from pizza import make_pizza as mp
+
+mp(16,'pepperoni')
+mp(12,'mushrooms','green peppers','extra cheese')
+
+#运行结果：
+#Making a 16-inch pizza with the following toppings:
+#-pepperoni
+#
+#Making a 12-inch pizza with the following toppings:
+#-mushrooms
+#-green peppers
+#-extra cheese
+```
+
+##### 4.4使用as给函数指定别名
+
+还可以给模块指定别名。通过给模块指定简短的别名（如模块pizza指定别名为p），让你能够更加轻松地调用模块中的函数。相比于pizza.make_pizza()，p.make_pizza()更为简洁。可以让你不用再关注模块名，只专注于描述性的函数名。这些函数名明确指出了哈函数的功能，对于理解代码而言，比模块名更重要。
+
+给模块指定别名的通用语法：
+
+> import mudule_name as mn
+
+##### 4.5导入模块中的所有函数
+
+使用星号*运算符可让Python导入模块中的所有函数：
+
+> from module_name import *
+
+import语句中的星号*让python将模块piazza中的每个函数都复制到这个程序文件中。由于导入了每个函数，可通过名称来调用每个函数，而无需使用句点表示法。然而，使用并非自己编写的大型模块时，最好不要采用这种导入方法。因为如果模块中有函数的名称与当前项目中使用的名称相同，可能导致意想不到的结果：Python可能遇到多个名称相同的函数或变量，进而覆盖函数，而不是分别导入所有的函数。
+
+最佳的做法就是，要么只导入需要使用的函数，要么导入整个模块并使用句点表示法。这让代码更清晰，更容易阅读和理解。
+
+#### 5.函数编写指南
+
+编写函数时需要牢记几个细节。
+
+1. 应给函数指定描述性名称，且只在其中使用小写字母和下划线。描述性名称可帮助你和别人明白代码想要做什么，给模块命名时也遵循上述约定。
+2. 每个函数都应包含简要地阐述其功能的注释。该注释紧跟在函数定义后面，并采用文档字符串格式。
+3. 给形参指定默认值时，等号两边不要有空格，对于函数调用中的关键字实参，也应遵循这种规定。
+4. 如果形参很多，导致函数定义的长度过长，可在函数定义中输入左括号后按回车键，并在下一行按两次Tab键，从而将形参列表和只缩进一层的函数体区分开来。
+5. 如果程序或模块包含多个函数，可使用两个空行将相邻的函数分开。
+6. 所有import语句都应放在文件的开头。唯一例外的情形是，在文件开头使用了注释来描述整个程序。
+
+### 第8章  类
+
+**面向对象编程**是最有效的软件编写方法之一。在面向对象编程中，你编写表示现实世界中的事物和情景的类，并基于这些类来创建对象。编写类时，你定义一大类对象都有的通用行为。基于类创建对象时，每个对象都自动具备这种通用行为，然后可根据需要赋予每个对象独特的个性。根据类来创建对象称为**实例化**，这让你能够使用类的实例。
+
+#### 1.创建和使用类
+
+使用类几乎可以模仿任何东西，下面来编写一个表示小狗的简单类Dog，它表示的不是特定的小狗，而是任何小狗。对于大多数小狗，它们都有名字和年龄，蹲下和打滚。我们的Dog类将包含它们。这个类让Python知道如何创建表示小狗的对象。编写这个类后，我们将使用它来创建表示特定小狗的实例。
+
+##### 1.1  创建Dog类
+
+示例：
+
+```python
+class Dog:
+    """一次模拟小狗的简单尝试。"""
+    
+    def _init_(self, name, age):
+        """初始化属性name和age。"""
+        self.name = name
+        self.age = age
+        
+    def sit(self):
+        """模拟小狗收到命令时蹲下。"""
+        print(f"{self.name} is now sitting.")
+        
+    def roll_over(self):
+        """模拟小狗收到命令时打滚。"""
+        print(f"{self.name} rolled over")
+```
+
+> 第一行首先定义了一个Dog类，根据约定，在python中首字母大写的名称指的就是类。这个类定义中没有圆括号，因为要从空白创建这个类。
+>
+> 第二行编写了一个文档字符串，对这个类的功能做了描述。
+>
+> 方法__ init _（），类中的函数称为方法。前面学到的有关函数的一切都适用于方法，目前来说，唯一的区别就是调用方法的方式。
+>
+> 第三行的方法__ init _（）是一个特殊的方法，每当我们根据Dog类创建新实例时，Python都会自动运行它。在这个方法的名称中，开头和结尾各有两个下划线，这是一种约定，旨在避免python默认方法与普通方法发生名称冲突，务必确保__ init _（）的两边都有两个下划线，否则当你使用类来创建实例时，将不会自动调用这个方法，进而引发难以发现的错误。
+>
+> 我们将方法__ init _（）定义成包含三个形参：self,name和age。在这个方法的定义中，形参self必不可少，而且必须位于其他形参的前面。
+>
+> 为何必须在方法定义中包含形参self呢？因为python调用这个方法；来创建Dog实例时，将自动传入实参self。每个与实例相关联的方法调用都自动传递实参self，它是一个指向实例本身的引用，让实例能够访问类中的属性和方法。创建Dog实例时，python将调用Dog类的方法__ init _（）。我们将通过实参向Dog()传递名字和年龄，self会自动传递，因此不需要传递它。每当根据Dog类创建实例时，都只需给最后两个形参（name和age）提供值。
+>
+> 第六行定义的两个变量都有前缀self。以self为前缀的变量可供类中的所有方法使用，可以通过类的任何实例来访问。self.name = name 获取与形参name相关联的值，并将其赋给变量name，然后该变量被关联到当前创建的实例。self.age = age 的作用与此类似。像这样可通过实例访问的变量称为属性。
+>
+> Dog类还定义了另外两个方法：sit()和roll_over()。这些方法执行时不需要额外的信息，因此它们只有一个形参self。我们随后创建的实例能够访问这些方法，换句话说，它们都会蹲下和打滚。当前，sit()和roll_over()所做的有限，只是打印一条消息，指出小狗正在蹲下或打滚。但也可以拓展这些方法以模拟实际情况：如果这个类包含在一个计算机游戏中，这些方法将包含创建小狗蹲下和打滚动画效果的代码；如果这个类是用于控制机器狗的，这些方法将让机器狗做出蹲下和打滚的动作。
