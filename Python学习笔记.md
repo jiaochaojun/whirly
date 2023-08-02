@@ -3786,3 +3786,442 @@ with open(filename) as file_object:
 
 使用关键字with时，open（）返回的文件对象只在with代码块内可用。如果要在with代码块外访问文件的内容，可在with代码内将文件的各行存储在一个列表中，并在with代码块外使用该列表：可以立即处理文件的各个部分，也可以推迟到程序后面再处理。
 
+示例：
+
+```python
+filename = 'pi_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+    
+for line in lines:
+    print(line.rstrip())
+    
+#运行结果：
+#3.1415926535
+#  8979323846
+#  2643383279
+```
+
+方法readlines()从文件中读取每一行，并将其存储在一个列表中。接下来列表赋给变量lines。在with代码块外，依然可以使用这个变量。
+
+##### 1.5  使用文件内容
+
+将文件读取到内存中后，就能以任何方式使用这些数据了。
+
+下面以简单的方式使用圆周率的值。首先创建一个字符串，它包含文件存储的所有数字，且没有任何空格。
+
+```python
+filename = 'pi_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+    
+pi_string = ''
+for line in lines:
+    pi_string += line.strip()
+    
+print(pi_string)
+print(len(pi_string))
+
+#运行结果：
+#3.141592653589793238462643383279
+#32
+```
+
+注意：  读取文本文件时，python将其中的所有文件都解读为字符串。如果读取的是数，并要将其作为数值使用，就必须使用函数int()将其转换为整数或使用函数float()将其转换为浮点数。
+
+##### 1.6  包含一百万位的大型文件
+
+```python
+filename = 'pi_million_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+
+pi_string = ''
+for line in lines:
+    pi_string += line.strip()
+    
+print(f"{pi_string[:52]}...")
+print(len(pi_string))
+
+#运行结果：
+#3.14159265358979323846264338327950288419716939937510...
+#1000002
+```
+
+检查圆周率中是否包含自己的生日：
+
+首先，将生日表示为一个由数字组成的字符串，再检查这个字符串是否包含在pi_string中：
+
+```python
+filename = 'pi_million_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+
+pi_string = ''
+for line in lines:
+    pi_string += line.strip()
+    
+birthday = input("Enter your birthday, in the form mmddyy: ")
+if birthday in pi_string:
+    print("You birthday appears in the first million digits of pi!")
+else:
+    print("You birthday does not appear in the first million digits of pi.")
+    
+#运行结果：
+#Enter your birthday, in the form mmddyy: 120372
+#You birthday appears in the first million digits of pi!
+```
+
+#### 2.写入文件
+
+保存数据最简单的方式之一就是将其写入文件中。通过将输出写入文件，即便关闭包含程序输出的终端窗口，这些输出也依然存在：可以在程序运行结束后查看这些输出，可以与别人分享输出文件，还可以编写程序来将这些输出读取到内存中并进行处理。
+
+##### 2.1  写入空文件
+
+将文本写入文件，在调用open()时需要提供另一个实参，告诉python你要写入打开的文件。
+
+示例：
+
+```python
+filename = 'programming.txt'
+
+with open(filename,'w') as file_object:
+    file_object.write("I love programming.")
+    
+#运行结果：
+
+```
+
+<img src="../AppData/Roaming/Typora/typora-user-images/image-20230802085642509.png" alt="image-20230802085642509" style="zoom: 50%;" />
+
+调用open()时，提供了两个实参。第一个实参也是要打开的文件的名称，第二个实参（‘w’）告诉python，要以写入模式打开这个文件。打开文件时，可指定读取模式（‘r’）、写入模式（‘w’）、附加模式（‘a’）或读写模式（‘r+’）。如果省略了模式实参，python将以默认的只读模式打开文件。
+
+如果要写入的文件不存在，函数open（）将自动创建它。然而，以写入模式（‘w’）打开文件时注意，因为如果指定的文件已经存在，python将在返回文件对象前清除该文件的内容。
+
+注意：python只能将字符串写入文本文件，要将数值数据存储到文本文件中，必须先使用函数str（）将其转换为字符串格式。
+
+##### 2.2  写入多行
+
+函数write()不会在写入的文本末尾添加换行符，因此如果写入多行时没有指定换行符，结果不会换行。
+
+要让每个字符串都单独占一行，需要在方法调用write()中包含换行符。还可以使用空格、制表符和空行来设置这些输出格式。
+
+##### 2.3  附加到文件
+
+如果要给文件添加内容，而不是覆盖原有的内容，可以以附加模式打开文件。以附加模式打开文件时，python不会在返回文件对象前清空文件内容，而是将写入文件的行添加到文件末尾。如果指定的文件不存在，python将为你创建一个空文件。
+
+#### 3.异常
+
+Python使用称为异常的特殊对象来管理程序执行期间发生的错误。每当发生让Python不知所措的错误时，它都会创建一个异常对象。如果你编写了处理该异常的代码，程序将继续运行；如果未对异常进行处理，程序将停止并显示traceback，其中包含有关异常的报告。
+
+异常是使用try-except代码块处理的。try-except代码块让python执行指定的操作，同时告诉python发生异常时怎么办。使用try-except代码块时，即便出现异常，程序也将继续运行：显示您编写的友好的错误消息，而不是令用户迷惑的traceback。
+
+##### 3.1  处理ZeroDivisionError异常
+
+> print(5/0)
+
+![image-20230802092943631](../AppData/Roaming/Typora/typora-user-images/image-20230802092943631.png)
+
+红色单词指出的错误是：ZeroDivisionError是个异常对象。python无法按照要求做时，就会创建这种对象。这种情况下，python将停止运行程序，并指出引发了哪种异常，而我们可根据这些信息对程序进行修改。
+
+下面来告诉python，发生这种错误时该怎么办。这样再发生此类错误，就有备无患了。
+
+##### 3.1  使用try-except代码块
+
+当你认为可能会发生错误时，可编写一个try-except代码块来处理可能引发的异常。
+
+```python
+try:
+    print(5/0)
+except ZeroDivisionError:
+    print("You can't divide by zero!")
+    
+#运行结果：You can't divide by zero!
+```
+
+将导致错误的代码行print（5/0）放在一个try代码块中，如果try代码块中的代码运行起来没有问题。python将跳过except代码块；如果try代码块中的代码导致了错误，python将查找与之匹配的except代码块并运行其中的代码。
+
+如果try-except代码块后面还有其他代码，程序将接着运行，因为已经告诉了Python如何处理这种错误。
+
+##### 3.2  使用异常避免崩溃
+
+发生错误时，如果程序还有工作尚未完成，妥善地处理错误就尤其重要。这种情况经常出现在要求用户提供输入的程序中；如果程序能够妥善地处理无效输入，就能再提示用户提供有效的输入，而不至于崩溃。
+
+示例：执行除数为0的除法运算时，它就崩溃了。
+
+```python
+print("Give me two numbers, and I'll divide them.")
+print("Enter 'q' to quit.")
+
+while True:
+    first_number = input("\nFirst number: ")
+    if first_number == 'q':
+        break
+    second_number = input("Second number: ")
+    if second_number == 'q':
+        break
+    
+    answer = int(first_number) / int(second_number)
+    print(answer)
+```
+
+![image-20230802101328701](../AppData/Roaming/Typora/typora-user-images/image-20230802101328701.png)
+
+##### 3.3  else代码块
+
+通过将可能引发错误的代码放在try_except代码块中，可提高程序抵御错误的能力。错误是执行除法运算的代码导致的，因此需要将它放到try_except代码块中。
+
+示例：
+
+```python
+print("Give me two numbers, and I'll divide them.")
+print("Enter 'q' to quit.")
+
+while True:
+    first_number = input("\nFirst number: ")
+    if first_number == 'q':
+        break
+    second_number = input("Second number: ")
+    if second_number == 'q':
+        break
+    
+    try:
+        answer = int(first_number) / int(second_number)
+    except ZeroDivisionError:
+        print("You can't divide by 0!")
+    else:
+        print(answer)
+        
+```
+
+如果try代码块因除零错误而失败，就打印一条友好消息，告诉用户如何避免这种错误。
+
+工作原理：
+
+python尝试执行try代码块中的代码，只有可能引发异常的代码才需要放在try语句中。有时候，有一些仅在try代码块成功执行才需要运行的代码，这些代码应放在else代码块中。except代码块告诉python，如果尝试运行try代码块中的代码时引发了指定的异常该怎么办。
+
+通过预测可能发生错误的代码，可编写健壮的程序。它们即便面临无效数据或缺少资源，也能继续运行，从而抵御无意的用户错误和恶意的攻击。
+
+##### 3.4  处理FileNotFoundError异常
+
+使用文件时，一种常见的问题就是找不到文件：文件可能在其他地方，文件名可能不正确，或者这个文件根本就不存在。对于所有这些情形都可使用try-except代码块以直观的方式处理。
+
+```python
+filename = 'alice.txt'
+
+with open(filename,encoding='utf-8') as f:
+    contents = f.read()
+```
+
+使用变量f来表示文件对象，给参数encoding指定了值，在系统的默认编码与要读取文件使用编码不一致时，必须这样做。
+
+Python无法读取不存在的文件，因此引发异常。
+
+修改：
+
+```python
+filename = 'alice.txt'
+
+try:
+    with open(filename,encoding='utf-8') as f:
+        contents = f.read()
+except FileNotFoundError:
+    print(f"Sorry, the  file {filename} does not exit.")
+    
+#运行结果：Sorry, the  file alice.txt does not exit.
+```
+
+##### 3.5  分析文本
+
+你可以分析整本书的文件文本。
+
+示例：
+
+```python
+filename = 'alice.txt'
+
+try:
+    with open(filename,encoding='utf-8') as f:
+        contents = f.read()
+except FileNotFoundError:
+    print(f"Sorry, the  file {filename} does not exit.")
+else:
+    #计算该文件大致包含多少个单词。
+    words = contents.split()
+    num_words = len(words)
+    print(f"The file {filename} has about {num_words} words.")
+    
+#运行结果：The file alice.txt has about 29465 words.
+```
+
+方法split（）可以根据字符串创建一个单词列表，以空格为分隔符将字符串分拆成多个部分，并将这些部分都存储到一个列表中。结果是一个包含字符串中所有单词的列表，虽然有些单词可能包含标点，但大致可以计算一共多少个单词。
+
+##### 3.6  使用多个文件
+
+```python
+def count_words(filename):
+    """计算一个文件大致包含多少个单词。"""
+    try:
+        with open(filename,encoding='utf-8') as f:
+            contents = f.read()
+    except FileNotFoundError:
+        print(f"Sorry, the  file {filename} does not exit.")
+    else:
+        #计算该文件大致包含多少个单词。
+        words = contents.split()
+        num_words = len(words)
+        print(f"The file {filename} has about {num_words} words.")
+        
+filenames = ['alice.txt','siddhartha.txt','moby_dick.txt','little_women.txt']
+for filename in filenames:
+    count_words(filename)
+    
+#运行结果：
+#The file alice.txt has about 29465 words.
+#Sorry, the  file siddhartha.txt does not exit.
+#The file moby_dick.txt has about 215830 words.
+#The file little_women.txt has about 189079 words.
+```
+
+##### 3.7  静默失败
+
+在前一个示例中，我们告诉用户有一个文件找不到。但并非每次捕获到异常都需要告诉用户，有时候你希望程序在发生异常时保持静默，就像没有发生一样继续运行。要让程序静默失败，可像通常那样编写try代码块，但在except（）代码块中明确地告诉python什么都不要做。python有一个pass语句，可用于让python在代码块中什么都不要做。
+
+```python
+def count_words(filename):
+    """计算一个文件大致包含多少个单词。"""
+    try:
+        with open(filename,encoding='utf-8') as f:
+            contents = f.read()
+    except FileNotFoundError:
+        pass
+    else:
+        #计算该文件大致包含多少个单词。
+        words = contents.split()
+        num_words = len(words)
+        print(f"The file {filename} has about {num_words} words.")
+        
+filenames = ['alice.txt','siddhartha.txt','moby_dick.txt','little_women.txt']
+for filename in filenames:
+    count_words(filename)
+    
+#运行结果：
+#The file alice.txt has about 29465 words.
+#The file moby_dick.txt has about 215830 words.
+#The file little_women.txt has about 189079 words.
+```
+
+比之前变化地就是pass，出现FileNot-FoundError异常时，将执行except代码块中的代码，但什么都不会发生。这种错误发生时，不会出现traceback，也没有任何输出。
+
+pass语句还充当到了占位符，提醒你在程序的某个地方什么都没做，并且以后也需要在这里做些什么，用户读不到，但我们可以读到它，进而处理所有找不到文件的问题。
+
+#### 4.存储数据
+
+很多程序要求用户输入某种信息，如让用户存储游戏首选项或提供要可视化的数据。不管关注点是什么，程序都把用户提供的信息存储在列表和字典等数据结构中。用户关闭程序时，几乎总是要保存他们提供的信息。一种简单的方式是，使用模块json来存储数据。
+
+模块json让你能够将简单的python数据结构存储到文件中，并在程序再次运行时加载该文件中的数据。你可以使用json在python程序之间分享数据。
+
+##### 4.1  使用json.dump()和json.load()
+
+函数json.dump()接受两个实参：要存储的数据，以及可用于存储数据的文件对象。
+
+先导入模块json，再创建一个数字列表。接着指定了要将数字列表存储到哪个文件中。通常使用文件拓展名.json来指出文件存储的数据为JSON格式。接下来，以写入模式打开这个文件，让json能够将数据写入其中。使用函数json.dump将数字列表存储到文件numbers.json中。
+
+```python
+import json
+
+numbers = [2,3,5,7,11,13]
+
+filename = 'numbers.json'
+with open(filename,'w') as f:
+    json.dump(numbers,f)
+```
+
+在编写一个程序，使用json.load()将列表读取到内存中：
+
+```python
+import json
+
+filename = 'numbers.json'
+
+with open(filename) as f:
+    numbers =json.load(f)
+    
+print(numbers)
+
+#运行结果：[2, 3, 5, 7, 11, 13]
+```
+
+确保要读取的文件。以读取方式打开该文件，因为python只需要读取它。使用函数json.load()加载存储在number.json中的信息，并将其赋给变量numbers。最后，打印恢复的数字列表。
+
+这是一种在程序之间共享数据的简单方式。
+
+##### 4.2  保存和读取用户生成的数据
+
+使用json保存用户生成的数据大有裨益，因为如果不以某种方式存储，用户的信息会在程序停止运行时丢失。
+
+```python
+import json
+
+username = input("What is your name? ")
+
+filename = 'username.json'
+
+with open(filename,'w') as f:
+    json.dump(username,f)
+    print(f"We'll remember you when you come back,{username}!")  
+```
+
+```python
+import json
+
+filename = 'username.json'
+
+with open(filename) as f:
+    username = json.load(f)
+    print(f"Welcome back,{username}!")
+```
+
+两个程序合并到一个程序中
+
+```python
+import json
+
+#如果以前存储了用户名，就加载它。
+#否则，提示用户输入用户名并存储它。
+filename = 'username.json'
+try:
+    with open(filename) as f:
+        username = json.load(f)
+except FileNotFoundError:
+    username = input("What is your name?")
+    with open(filename,'w') as f:
+        json.dump(username,f)
+        print(f"We'll remember you when you come back,{username}!")
+else:
+    print(f"Welcome back,{username}!")
+```
+
+##### 4.3 重构
+
+你经常会遇到这样的情况：代码能够正确的运行，但通过将其划分为一系列完成具体工作的函数，还可以改进。这样的过程称为重构。重构让代码更清晰、更易于理解、更容易拓展。
+
+### 第10章  测试代码
+
+编写函数或类时，还可为其编写测试。通过测试，可确定代码面对各种输入都能够按要求的那样工作。
+
+#### 1.测试函数
+
+要学习测试，必须有要测试的代码。
+
+##### 1.1  单元测试和测试用例
+
+python标准库中的模块unittest提供了代码测试工具。单元测试用于核实函数的某个方面没有问题。 测试用例是一组单元测试，它们一道核实函数在各种情形下的测试。全覆盖的测试用例包含一整套单元测试，涵盖了各种可能的函数使用方式。对于大型项目，要进行全覆盖测试可能很难。通常最初只要针对代码的重要行为编写测试即可，等项目被广泛使用时，再考虑全覆盖。
+
+##### 1.2  可通过测试
+
+你需要一段时间才能习惯创建测试用例的语法，但创建测试用例之后，再添加针对函数的单元测试就很简单了。要为编写的函数编写测试用例，可先导入模块unittest和要测试的函数，再创建一个继承unittest.TestCase的类，并编写一系列方法对函数行为的不同方面进行测试。
